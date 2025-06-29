@@ -1,0 +1,96 @@
+[
+  {
+    "id": "copilot",
+    "name": "GitHub Copilot",
+    "description": "AI pair programmer that helps you write better code",
+    "strengths": [
+      "code completion",
+      "documentation",
+      "multiple languages",
+      "IDE integration"
+    ],
+    "best_for": ["general coding", "learning to code", "quick prototyping"],
+    "languages": [
+      "Python",
+      "JavaScript",
+      "TypeScript",
+      "Java",
+      "C++",
+      "Go",
+      "Ruby",
+      "PHP",
+      "C#",
+      "HTML/CSS"
+    ]
+  },
+  {
+    "id": "cursor",
+    "name": "Cursor",
+    "description": "AI-first code editor with built-in AI assistance",
+    "strengths": [
+      "code generation",
+      "refactoring",
+      "debugging",
+      "project-wide understanding"
+    ],
+    "best_for": [
+      "full-stack development",
+      "codebase navigation",
+      "large projects"
+    ],
+    "languages": [
+      "JavaScript",
+      "TypeScript",
+      "Python",
+      "Go",
+      "Rust",
+      "Java",
+      "C++"
+    ]
+  },
+  {
+    "id": "replit",
+    "name": "Replit AI",
+    "description": "Cloud-based IDE with AI assistance",
+    "strengths": ["quick setup", "collaboration", "deployment", "education"],
+    "best_for": ["learning", "hackathons", "collaborative coding", "web apps"],
+    "languages": [
+      "Python",
+      "JavaScript",
+      "TypeScript",
+      "Java",
+      "HTML/CSS",
+      "C++",
+      "C#",
+      "PHP"
+    ]
+  },
+  {
+    "id": "codewhisperer",
+    "name": "Amazon CodeWhisperer",
+    "description": "ML-powered coding companion",
+    "strengths": [
+      "AWS integration",
+      "security scanning",
+      "enterprise features"
+    ],
+    "best_for": [
+      "AWS development",
+      "enterprise applications",
+      "security-focused development"
+    ],
+    "languages": ["Python", "Java", "JavaScript", "TypeScript", "C#"]
+  },
+  {
+    "id": "claude",
+    "name": "Anthropic Claude",
+    "description": "AI assistant with strong reasoning capabilities",
+    "strengths": [
+      "complex problem solving",
+      "documentation",
+      "explaining code"
+    ],
+    "best_for": ["algorithm design", "system architecture", "code review"],
+    "languages": ["Python", "JavaScript", "TypeScript", "Java", "C++"]
+  }
+]
