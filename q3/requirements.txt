@@ -1,0 +1,9 @@
+fastapi[standard]
+uvicorn
+python-multipart
+jinja2
+python-dotenv
+google-generativeai
+pydantic
+typing-extensions
+aiofiles

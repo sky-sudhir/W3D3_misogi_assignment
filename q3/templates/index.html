@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Adaptive Prompt Optimizer</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link href="{{ url_for('static', path='/main.css') }}" rel="stylesheet" />
+    <script>
+      // Ensure page is fully loaded before showing content
+      document.addEventListener("DOMContentLoaded", function () {
+        console.log("Page loaded successfully");
+      });
+    </script>
+  </head>
+  <body class="min-h-screen gradient-bg">
+    <div class="container mx-auto px-4 py-8">
+      <!-- Header -->
+      <div class="text-center mb-12">
+        <h1 class="text-5xl font-bold text-white mb-4">
+          <i class="fas fa-magic mr-3"></i>
+          Adaptive Prompt Optimizer
+        </h1>
+        <p class="text-xl text-white opacity-90">
+          Optimize your prompts for specific AI coding tools with intelligent
+          analysis
+        </p>
+      </div>
+
+      <!-- Main Content -->
+      <div class="max-w-6xl mx-auto">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <!-- Input Section -->
+          <div class="glass-effect rounded-2xl p-8">
+            <h2 class="text-2xl font-bold text-white mb-6">
+              <i class="fas fa-edit mr-2"></i>
+              Input Your Prompt
+            </h2>
+
+            <form id="optimizeForm">
+              <div class="mb-6">
+                <label
+                  class="block text-white text-sm font-bold mb-2"
+                  for="prompt"
+                >
+                  Original Prompt
+                </label>
+                <textarea
+                  id="prompt"
+                  name="prompt"
+                  rows="6"
+                  class="w-full px-4 py-3 rounded-lg bg-white bg-opacity-20 text-white placeholder-gray-300 border border-white border-opacity-30 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+                  placeholder="Enter your coding prompt here..."
+                  required
+                ></textarea>
+              </div>
+
+              <div class="mb-6">
+                <label
+                  class="block text-white text-sm font-bold mb-2"
+                  for="tool"
+                >
+                  Target AI Tool
+                </label>
+                <select
+                  id="tool"
+                  name="tool"
+                  class="w-full px-4 py-3 rounded-lg bg-white bg-opacity-20 text-white border border-white border-opacity-30 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+                  required
+                >
+                  <option value="" disabled selected>
+                    Choose an AI tool...
+                  </option>
+                  {% for tool_id, tool_info in tools.items() %}
+                  <option value="{{ tool_id }}">{{ tool_info.name }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+
+              <button
+                type="submit"
+                class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition duration-300 transform hover:scale-105"
+              >
+                <i class="fas fa-rocket mr-2"></i>
+                Optimize Prompt
+              </button>
+            </form>
+
+            <!-- Loading indicator -->
+            <div id="loading" class="loading text-center mt-6">
+              <div
+                class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-white"
+              ></div>
+              <p class="text-white mt-2">Analyzing and optimizing...</p>
+            </div>
+          </div>
+
+          <!-- Tool Information -->
+          <div class="glass-effect rounded-2xl p-8">
+            <h2 class="text-2xl font-bold text-white mb-6">
+              <i class="fas fa-tools mr-2"></i>
+              Supported Tools
+            </h2>
+
+            <div class="grid grid-cols-1 gap-4 max-h-96 overflow-y-auto">
+              {% for tool_id, tool_info in tools.items() %}
+              <div
+                class="tool-card bg-white bg-opacity-10 rounded-lg p-4 cursor-pointer"
+                onclick="selectTool('{{ tool_id }}')"
+              >
+                <h3 class="text-lg font-semibold text-white mb-2">
+                  {{ tool_info.name }}
+                </h3>
+                <p class="text-sm text-gray-300 mb-3">
+                  <strong>Strengths:</strong> {{ tool_info.strengths | join(',
+                  ') }}
+                </p>
+                <div class="text-xs text-gray-400">
+                  <strong>Best Practices:</strong>
+                  <ul class="mt-1">
+                    {% for practice in tool_info.best_practices[:2] %}
+                    <li>• {{ practice }}</li>
+                    {% endfor %} {% if tool_info.best_practices|length > 2 %}
+                    <li>
+                      • And {{ tool_info.best_practices|length - 2 }} more...
+                    </li>
+                    {% endif %}
+                  </ul>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+
+        <!-- Results Section -->
+        <div id="results" class="hidden mt-8">
+          <div class="glass-effect rounded-2xl p-8">
+            <h2 class="text-2xl font-bold text-white mb-6">
+              <i class="fas fa-chart-line mr-2"></i>
+              Optimization Results
+            </h2>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <!-- Original Prompt -->
+              <div class="bg-white bg-opacity-10 rounded-lg p-6">
+                <h3 class="text-lg font-semibold text-white mb-3">
+                  <i class="fas fa-file-alt mr-2"></i>
+                  Original Prompt
+                </h3>
+                <div
+                  id="originalPrompt"
+                  class="text-gray-300 bg-gray-800 p-4 rounded-lg font-mono text-sm max-h-48 overflow-y-auto"
+                ></div>
+              </div>
+
+              <!-- Optimized Prompt -->
+              <div class="bg-white bg-opacity-10 rounded-lg p-6">
+                <h3 class="text-lg font-semibold text-white mb-3">
+                  <i class="fas fa-magic mr-2"></i>
+                  Optimized Prompt
+                </h3>
+                <div
+                  id="optimizedPrompt"
+                  class="text-gray-300 bg-gray-800 p-4 rounded-lg font-mono text-sm max-h-48 overflow-y-auto"
+                ></div>
+                <button
+                  onclick="copyToClipboard('optimizedPrompt')"
+                  class="mt-3 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded text-sm transition duration-300"
+                >
+                  <i class="fas fa-copy mr-1"></i>
+                  Copy
+                </button>
+              </div>
+            </div>
+
+            <!-- Analysis -->
+            <div class="mt-6 bg-white bg-opacity-10 rounded-lg p-6">
+              <h3 class="text-lg font-semibold text-white mb-3">
+                <i class="fas fa-analytics mr-2"></i>
+                Prompt Analysis
+              </h3>
+              <div id="analysis" class="text-gray-300"></div>
+            </div>
+
+            <!-- Optimizations Made -->
+            <div class="mt-6 bg-white bg-opacity-10 rounded-lg p-6">
+              <h3 class="text-lg font-semibold text-white mb-3">
+                <i class="fas fa-list-check mr-2"></i>
+                Optimizations Applied
+              </h3>
+              <div id="optimizations" class="text-gray-300"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="{{ url_for('static', path='/main.js') }}"></script>
+    <script>
+      function selectTool(toolId) {
+        document.getElementById("tool").value = toolId;
+      }
+
+      function copyToClipboard(elementId) {
+        const text = document.getElementById(elementId).textContent;
+        navigator.clipboard.writeText(text).then(() => {
+          alert("Copied to clipboard!");
+        });
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        const form = document.getElementById("optimizeForm");
+        if (!form) {
+          console.error("Form not found!");
+          return;
+        }
+
+        form.addEventListener("submit", async (e) => {
+          e.preventDefault();
+
+          const formData = new FormData(e.target);
+          const prompt = formData.get("prompt");
+          const tool = formData.get("tool");
+
+          // Show loading
+          document.getElementById("loading").classList.add("active");
+          document.getElementById("results").classList.add("hidden");
+
+          try {
+            console.log("Submitting form with data:", { prompt, tool });
+            const response = await fetch("/api/optimize", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                prompt: prompt,
+                tool: tool,
+              }),
+            });
+
+            console.log("Response status:", response.status);
+            const data = await response.json();
+            console.log("Response data:", data);
+
+            if (response.ok) {
+              // Display results
+              document.getElementById("originalPrompt").textContent =
+                data.original_prompt;
+              document.getElementById("optimizedPrompt").textContent =
+                data.optimized_prompt;
+
+              // Display analysis
+              const analysisHtml = `
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <strong>Intent:</strong> ${
+                                  data.analysis.primary_intent
+                                }<br>
+                                <strong>Complexity:</strong> ${
+                                  data.analysis.complexity_level
+                                }/5<br>
+                                <strong>Tool:</strong> ${data.tool}
+                            </div>
+                            <div>
+                                <strong>Technical Domains:</strong> ${data.analysis.technical_domains.join(
+                                  ", "
+                                )}<br>
+                                <strong>Key Requirements:</strong> ${data.analysis.key_requirements.join(
+                                  ", "
+                                )}
+                            </div>
+                        </div>
+                    `;
+              document.getElementById("analysis").innerHTML = analysisHtml;
+
+              // Display optimizations
+              const optimizationsHtml = data.optimizations_made
+                .map((opt) => `<li class="mb-2">• ${opt}</li>`)
+                .join("");
+              document.getElementById(
+                "optimizations"
+              ).innerHTML = `<ul>${optimizationsHtml}</ul>`;
+
+              // Show results
+              document.getElementById("results").classList.remove("hidden");
+            } else {
+              alert("Error: " + (data.detail || "Unknown error"));
+            }
+          } catch (error) {
+            console.error("Form submission error:", error);
+            alert("Error: " + error.message);
+          } finally {
+            // Hide loading
+            document.getElementById("loading").classList.remove("active");
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

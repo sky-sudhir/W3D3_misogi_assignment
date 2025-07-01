@@ -1,168 +1,189 @@
-# AI Coding Agent Recommendation System
+# Adaptive Prompt Optimizer
 
-A web application that helps developers find the best AI coding assistant for their specific programming tasks by analyzing task requirements and matching them with the most suitable AI coding agents.
+A sophisticated web application that optimizes prompts for specific AI coding tools using Google Gemini AI for intelligent analysis and optimization.
 
 ## Features
 
-- **Smart Task Analysis**: Uses Google's Gemini 2.0 Flash model to understand programming tasks
-- **Agent Matching**: Recommends the top 3 AI coding assistants based on task requirements
-- **Detailed Explanations**: Provides clear reasoning for each recommendation
-- **Multiple Agent Support**: Includes popular coding assistants like GitHub Copilot, Cursor, Replit AI, and more
-- **Responsive Design**: Works on both desktop and mobile devices
+- **Multi-Tool Support**: Supports 7+ AI coding tools including:
 
-## Tech Stack
+  - GitHub Copilot
+  - Cursor AI
+  - Replit AI
+  - Amazon CodeWhisperer
+  - Tabnine
+  - Sourcegraph Cody
+  - Claude (Anthropic)
 
-### Frontend
-- Next.js 14 (App Router)
-- TypeScript
-- Tailwind CSS
-- shadcn/ui
+- **Intelligent Analysis**: Uses Google Gemini AI to analyze prompt intent, complexity, and requirements
 
-### Backend
-- FastAPI
-- Google's Gemini 2.0 Flash model
-- Python 3.8+
+- **Tool-Specific Optimization**: Generates optimized prompts based on each tool's strengths and best practices
 
-## Getting Started
+- **Beautiful Web Interface**: Modern, responsive UI with glassmorphism design
 
-### Prerequisites
+- **Before/After Comparison**: Clear display of original vs optimized prompts with detailed explanations
 
-- Node.js 18+ and npm/yarn/pnpm
-- Python 3.8+
-- Google API key with access to Gemini API
+- **Copy to Clipboard**: Easy copying of optimized prompts for immediate use
 
-### Backend Setup
+## Installation
 
-1. Navigate to the backend directory:
+1. **Clone the repository**:
+
    ```bash
-   cd backend
+   git clone <repository-url>
+   cd adaptive-prompt-optimizer
    ```
 
-2. Create and activate a virtual environment:
-   ```bash
-   python -m venv venv
-   # On Windows:
-   .\venv\Scripts\activate
-   # On macOS/Linux:
-   source venv/bin/activate
-   ```
+2. **Install dependencies**:
 
-3. Install dependencies:
    ```bash
    pip install -r requirements.txt
    ```
 
-4. Create a `.env` file in the backend directory with your Google API key:
-   ```
-   GOOGLE_API_KEY=your_api_key_here
+3. **Set up Google Gemini API**:
+
+   - Get your API key from [Google AI Studio](https://makersuite.google.com/app/apikey)
+   - Set the environment variable:
+
+     ```bash
+     # Windows
+     set GEMINI_API_KEY=your_api_key_here
+
+     # Linux/Mac
+     export GEMINI_API_KEY=your_api_key_here
+     ```
+
+   Or create a `.env` file:
+
+   ```env
+   GEMINI_API_KEY=your_api_key_here
    ```
 
-5. Start the backend server:
+## Usage
+
+1. **Start the application**:
+
    ```bash
-   uvicorn main:app --reload --port 8000
+   python app.py
    ```
 
-### Frontend Setup
+2. **Open your browser** and navigate to `http://localhost:8000`
 
-1. Navigate to the frontend directory:
-   ```bash
-   cd frontend
-   ```
+3. **Enter your prompt** in the text area
 
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
+4. **Select your target AI tool** from the dropdown
 
-3. Start the development server:
-   ```bash
-   npm run dev
-   ```
+5. **Click "Optimize Prompt"** to get your optimized version
 
-4. Open [http://localhost:3000](http://localhost:3000) in your browser
-
-## How to Use
-
-1. Enter a description of your coding task in the text area
-2. (Optional) Specify the programming language
-3. Select the task complexity (Low, Medium, High)
-4. Click "Get Recommendations"
-5. View the top 3 recommended AI coding assistants with detailed explanations
-
-## Example Prompts
-
-- "Build a responsive e-commerce website with React and Node.js"
-- "Analyze sales data to find trends and create visualizations"
-- "I'm learning Python and want to build a simple calculator"
-- "Fix memory leaks in my React application"
-- "Implement Dijkstra's algorithm for shortest path finding"
+6. **Review the results**:
+   - Compare original vs optimized prompts
+   - Read the detailed analysis
+   - See what optimizations were applied
+   - Copy the optimized prompt to use in your chosen AI tool
 
 ## API Endpoints
 
-### POST /recommend
+### `GET /`
 
-Recommends AI coding agents based on task requirements.
+Returns the main web interface
 
-**Request:**
+### `POST /api/optimize`
+
+Optimizes a prompt for a specific tool
+
+**Request Body**:
+
 ```json
 {
-  "description": "Build a REST API with user authentication",
-  "language": "Python",
-  "complexity": "medium"
+  "prompt": "Your original prompt here",
+  "tool": "copilot"
 }
 ```
 
-**Response:**
+**Response**:
+
 ```json
-[
-  {
-    "id": "copilot",
-    "name": "GitHub Copilot",
-    "score": 8.7,
-    "explanation": "Recommended because it supports Python, excels at general coding, and offers code completion.",
-    "analysis": {
-      "task_type": "api_development",
-      "required_skills": ["Python", "API Design", "Authentication"],
-      "recommended_features": ["code completion", "documentation"]
-    }
-  }
-  // ... more recommendations
-]
+{
+  "original_prompt": "Your original prompt here",
+  "optimized_prompt": "The optimized version",
+  "tool": "GitHub Copilot",
+  "analysis": {
+    "primary_intent": "code_generation",
+    "complexity_level": 3,
+    "key_requirements": ["..."],
+    "missing_context": ["..."],
+    "technical_domains": ["..."]
+  },
+  "optimizations_made": ["..."],
+  "timestamp": "2024-01-01T12:00:00"
+}
 ```
+
+### `GET /api/tools`
+
+Returns information about all supported tools
+
+## Supported Tools
+
+| Tool                 | Strengths                                                   | Best Practices                                          |
+| -------------------- | ----------------------------------------------------------- | ------------------------------------------------------- |
+| GitHub Copilot       | Code completion, Function generation, Bug fixes             | Use descriptive names, Add type hints, Be specific      |
+| Cursor AI            | Code editing, Refactoring, Multi-file operations            | Describe current/desired state, Be explicit about files |
+| Replit AI            | Full-stack development, Interactive coding, Deployment      | Specify language, Mention deployment needs              |
+| Amazon CodeWhisperer | AWS integration, Security-focused code, Enterprise patterns | Mention AWS services, Include security considerations   |
+| Tabnine              | Code completion, Pattern recognition, Team consistency      | Use consistent naming, Provide team context             |
+| Sourcegraph Cody     | Code search, Large codebase navigation, Code understanding  | Reference specific files, Use precise terminology       |
+| Claude (Anthropic)   | Code analysis, Architecture design, Complex reasoning       | Provide comprehensive context, Ask for explanations     |
 
 ## Project Structure
 
 ```
-.
-├── backend/               # FastAPI backend
-│   ├── main.py           # Main application file
-│   ├── agentdb.json      # Database of AI coding agents
-│   ├── requirements.txt  # Python dependencies
-│   └── .env             # Environment variables
-├── frontend/             # Next.js frontend
-│   ├── src/
-│   │   ├── app/         # Next.js app directory
-│   │   └── components/   # React components
-│   ├── public/           # Static files
-│   └── package.json      # Node.js dependencies
-└── README.md             # This file
+adaptive-prompt-optimizer/
+├── app.py                 # Main FastAPI application
+├── requirements.txt       # Python dependencies
+├── templates/
+│   └── index.html        # Main web interface
+├── static/               # Static files (CSS, JS, images)
+└── README.md            # This file
 ```
+
+## Technology Stack
+
+- **Backend**: FastAPI, Python 3.8+
+- **AI Integration**: Google Gemini AI API
+- **Frontend**: HTML5, Tailwind CSS, Vanilla JavaScript
+- **Server**: Uvicorn ASGI server
 
 ## Contributing
 
 1. Fork the repository
-2. Create a new branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+2. Create a feature branch
+3. Make your changes
+4. Add tests if applicable
+5. Submit a pull request
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License - see the LICENSE file for details.
 
-## Acknowledgments
+## Troubleshooting
 
-- [Google Gemini API](https://ai.google.dev/)
-- [FastAPI](https://fastapi.tiangolo.com/)
-- [Next.js](https://nextjs.org/)
-- [shadcn/ui](https://ui.shadcn.com/)
+### Common Issues
+
+1. **API Key Error**: Make sure your `GEMINI_API_KEY` is set correctly
+2. **Import Errors**: Ensure all dependencies are installed with `pip install -r requirements.txt`
+3. **Port Already in Use**: Change the port in `app.py` or kill the process using the port
+
+### Getting Help
+
+- Check the console output for error messages
+- Ensure your internet connection is stable (required for Gemini AI API)
+- Verify your API key has sufficient quota
+
+## Future Enhancements
+
+- [ ] Add more AI coding tools
+- [ ] Implement prompt history and favorites
+- [ ] Add bulk optimization for multiple prompts
+- [ ] Create browser extension for quick optimization
+- [ ] Add prompt templates for common use cases
+- [ ] Implement user accounts and saved preferences

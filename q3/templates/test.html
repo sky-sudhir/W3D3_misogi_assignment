@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Test Page</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 40px;
+        line-height: 1.6;
+      }
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+      }
+      h1 {
+        color: #333;
+      }
+      .success {
+        color: green;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Template Rendering Test</h1>
+      <p class="success">
+        ✓ If you can see this page, template rendering is working correctly!
+      </p>
+
+      <h2>Request Information:</h2>
+      <ul>
+        <li>Request Method: {{ request.method }}</li>
+        <li>Request URL: {{ request.url }}</li>
+      </ul>
+
+      <h2>Available Tools:</h2>
+      <ul>
+        {% for tool_id, tool_info in tools.items() %}
+        <li>{{ tool_info.name }}</li>
+        {% endfor %}
+      </ul>
+
+      <p><a href="/">Return to main page</a></p>
+    </div>
+  </body>
+</html>
